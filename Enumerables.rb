@@ -50,7 +50,31 @@ module Enumerable
     y
   end
 
+  def my_any?(pattern = nil)
+    y = false
+    if block_given?
+      self.my_each { |x| y = true if yield(x)}
+    elsif pattern
+      self.my_each { |x| y = true if pattern == x }
+    elsif pattern.is_a? Regexp
+      self.my_each { |x| y = true if x =~ pattern}
+    elsif pattern.is_a? Class
+      self.my_each { |x| y = true if x.is_a? pattern}
+    else
+      self.my_each { |x| y = true if x} 
+    end
+    y
+  end
+
 end
+
+arr = [1,2,3,4,5]
+
+puts ""
+puts "ALL"
+arr = [1,2,3,4]
+puts arr.any? {|x| x < 0 }
+puts arr.my_any? { |x| x < 0 }
 
 
 
