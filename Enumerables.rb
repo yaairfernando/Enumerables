@@ -97,7 +97,8 @@ module Enumerable
   def my_map
     if block_given?
       arr = []
-      self.my_each { |x| arr << yield(x) }
+      self.my_each { |x| arr << yield(x) } if proc.nil?
+      self.my_each { |x| arr << proc.call(x) } if !proc.nil?
     else
       to_enum(:my_map)
     end
@@ -121,8 +122,11 @@ puts arr.count(2)
 puts arr.my_count(2)
 puts arr.count
 puts arr.my_count
+p = Proc.new{|i| i * 2}
 print arr.map {|i| i*i}
 print arr.my_map {|i| i*i}
+print arr.map(&p)
+print arr.my_map(&p)
 
 
 
