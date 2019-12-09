@@ -16,7 +16,7 @@ module Enumerable
     if block_given?
       i = 0;
       while self.size > i
-        yield(self[i])
+        yield(self[i], i)
         i += 1
       end
     else
@@ -24,7 +24,18 @@ module Enumerable
     end
   end
 
+  def my_select
+    if block_given?
+      rst = []
+      self.my_each { |i| rst.push(i) if yield(i) }
+      rst.nil? ? false : rst
+    else  
+      to_enum(:my_select)
+    end
+  end
+
 end
+
 
 
 
