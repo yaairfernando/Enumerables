@@ -94,6 +94,16 @@ module Enumerable
     count
   end
 
+  def my_map
+    if block_given?
+      arr = []
+      self.my_each { |x| arr << yield(x) }
+    else
+      to_enum(:my_map)
+    end
+    arr
+  end
+
 end
 
 arr = [1,2,3,4,5]
@@ -111,6 +121,8 @@ puts arr.count(2)
 puts arr.my_count(2)
 puts arr.count
 puts arr.my_count
+print arr.map {|i| i*i}
+print arr.my_map {|i| i*i}
 
 
 
