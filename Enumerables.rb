@@ -28,13 +28,30 @@ module Enumerable
     if block_given?
       rst = []
       self.my_each { |i| rst.push(i) if yield(i) }
-      rst.nil? ? false : rst
+      rst
     else  
       to_enum(:my_select)
     end
   end
 
+  def my_all?(pattern = nil)
+    y = true
+    if block_given?
+      self.my_each { |x| y = false unless yield(x)}
+    elsif pattern
+      self.my_each { |x| y = false unless pattern == x }
+    elsif pattern.is_a? Regexp
+      self.my_each { |x| y = false unless x =~ pattern}
+    elsif pattern.is_a? Class
+      self.my_each { |x| y = false unless x.is_a? pattern}
+    else
+      self.my_each { |x| y = false unless x} 
+    end
+    y
+  end
+
 end
+
 
 
 
