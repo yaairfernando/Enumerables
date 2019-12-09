@@ -82,6 +82,17 @@ module Enumerable
     y
   end
 
+  def my_count(args = nil)
+    count = 0
+    if args
+      self.my_each { |x| count += 1 if x === args }
+    elsif block_given?
+      self.my_each { |x| count+=1 if yield(x) }
+    else
+      count = self.size
+    end
+    count
+  end
 
 end
 
@@ -94,6 +105,12 @@ puts arr.any? {|x| x < 0 }
 puts arr.my_any? { |x| x < 0 }
 puts arr.none? {|x| x }
 puts arr.my_none? {|x| x}
+puts arr.count { |x| x % 2 == 0}
+puts arr.my_count { |x| x % 2 == 0}
+puts arr.count(2)
+puts arr.my_count(2)
+puts arr.count
+puts arr.my_count
 
 
 
