@@ -52,7 +52,7 @@ module Enumerable
         self_item.my_each { |x| y = false unless pattern == x }
       end
     else
-      self_item.my_each { |x| y = false unless x == pattern }
+      self_item.my_each { |x| y = false unless x }
     end
     y
   end
