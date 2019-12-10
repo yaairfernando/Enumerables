@@ -105,31 +105,31 @@ module Enumerable
     arr
   end
 
+  def my_inject(*args)
+    rst, sym = inj_param(*args)
+    arr = rst ? to_a : to_a[1..-1]
+    rst ||= to_a[0]
+    if block_given?
+      arr.my_each { |i| rst = yield(rst, i) }
+    elsif !sym.nil
+      arr.my_each { |i| rst = rst.public_send(sym, i) }
+    end
+    rst
+  end
+
+  def inj_param(*args)
+    rst, sym = nil
+    args.my_each do |arg|
+      rst = arg if arg.is_a? Numeric
+      sym = arg unless arg.is_a? Numeric
+    end
+    [rst, sym]
+  end
+
+  def multiply_els(arr)
+    arr.my_inject(:*)
+  end
+
 end
 
 arr = [1,2,3,4,5]
-
-puts ""
-puts "ALL"
-arr = [1,2,3,4]
-puts arr.any? {|x| x < 0 }
-puts arr.my_any? { |x| x < 0 }
-puts arr.none? {|x| x }
-puts arr.my_none? {|x| x}
-puts arr.count { |x| x % 2 == 0}
-puts arr.my_count { |x| x % 2 == 0}
-puts arr.count(2)
-puts arr.my_count(2)
-puts arr.count
-puts arr.my_count
-p = Proc.new{|i| i * 2}
-print arr.map {|i| i*i}
-print arr.my_map {|i| i*i}
-print arr.map(&p)
-print arr.my_map(&p)
-
-
-
-
-
-
