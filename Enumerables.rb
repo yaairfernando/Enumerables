@@ -1,22 +1,25 @@
 # frozen_string_literal: true
 
+# rubocop:disable Metrics/ModuleLength,
 module Enumerable
-
+  # rubocop:disable Metrics/PerceivedComplexity,Metrics/CyclomaticComplexity
   def my_each
+    self_item = self
     if block_given?
-      (self.size).times do |i|
-        yield(self[i])
+      self_item.size.times do |i|
+        yield(self_item[i])
       end
     else
       to_enum(:my_each)
-    end 
+    end
   end
 
   def my_each_with_index
+    self_item = self
     if block_given?
-      i = 0;
-      while self.size > i
-        yield(self[i], i)
+      i = 0
+      while self_item.size > i
+        yield(self_item[i], i)
         i += 1
       end
     else
@@ -25,82 +28,86 @@ module Enumerable
   end
 
   def my_select
+    self_item = self
     if block_given?
       rst = []
-      self.my_each { |i| rst.push(i) if yield(i) }
+      self_item.my_each { |i| rst.push(i) if yield(i) }
       rst
-    else  
+    else
       to_enum(:my_select)
     end
   end
 
   def my_all?(pattern = nil)
     y = true
+    self_item = self
     if block_given?
-      self.my_each { |x| y = false unless yield(x)}
+      self_item.my_each { |x| y = false unless yield(x) }
     elsif pattern
-      self.my_each { |x| y = false unless pattern == x }
+      self_item.my_each { |x| y = false unless pattern == x }
     elsif pattern.is_a? Regexp
-      self.my_each { |x| y = false unless x =~ pattern}
+      self_item.my_each { |x| y = false unless x =~ pattern }
     elsif pattern.is_a? Class
-      self.my_each { |x| y = false unless x.is_a? pattern}
+      self_item.my_each { |x| y = false unless x.is_a? pattern }
     else
-      self.my_each { |x| y = false unless x} 
+      self_item.my_each { |x| y = false unless x }
     end
     y
   end
 
   def my_any?(pattern = nil)
     y = false
+    self_item = self
     if block_given?
-      self.my_each { |x| y = true if yield(x)}
+      self_item.my_each { |x| y = true if yield(x) }
     elsif pattern
-      self.my_each { |x| y = true if pattern == x }
+      self_item.my_each { |x| y = true if pattern == x }
     elsif pattern.is_a? Regexp
-      self.my_each { |x| y = true if x =~ pattern}
+      self_item.my_each { |x| y = true if x =~ pattern }
     elsif pattern.is_a? Class
-      self.my_each { |x| y = true if x.is_a? pattern}
+      self_item.my_each { |x| y = true if x.is_a? pattern }
     else
-      self.my_each { |x| y = true if x} 
+      self_item.my_each { |x| y = true if x }
     end
     y
   end
 
   def my_none?(pattern = nil)
     y = true
+    self_item = self
     if block_given?
-      self.my_each { |x| y = false if yield(x)}
+      self_item.my_each { |x| y = false if yield(x) }
     elsif pattern
-      self.my_each { |x| y = false if pattern == x }
+      self_item.my_each { |x| y = false if pattern == x }
     elsif pattern.is_a? Regexp
-      self.my_each { |x| y = false if x =~ pattern}
+      self_item.my_each { |x| y = false if x =~ pattern }
     elsif pattern.is_a? Class
-      self.my_each { |x| y = false if x.is_a? pattern}
+      self_item.my_each { |x| y = false if x.is_a? pattern }
     else
-      self.my_each { |x| y = false if x} 
+      self_item.my_each { |x| y = false if x }
     end
     y
   end
 
   def my_count(args = nil)
     count = 0
+    self_item = self
     if args
-      self.my_each { |x| count += 1 if x === args }
+      self_item.my_each { |x| count += 1 if x == args }
     elsif block_given?
-      self.my_each { |x| count+=1 if yield(x) }
+      self_item.my_each { |x| count += 1 if yield(x) }
     else
-      count = self.size
+      count = self_item.size
     end
     count
   end
 
   def my_map
-    if block_given?
-      arr = []
-      self.my_each { |x| arr << yield(x) } if proc.nil?
-      self.my_each { |x| arr << proc.call(x) } if !proc.nil?
-    else
-      to_enum(:my_map)
+    arr = []
+    my_each do |x|
+      return to_enum(:my_map) unless block_given?
+
+      arr << yield(x) || arr << proc.call(i) if block_given?
     end
     arr
   end
@@ -129,7 +136,7 @@ module Enumerable
   def multiply_els(arr)
     arr.my_inject(:*)
   end
-
 end
 
-arr = [1,2,3,4,5]
+# rubocop:enable Metrics/PerceivedComplexity,Metrics/CyclomaticComplexity
+# rubocop:enable Metrics/ModuleLength
