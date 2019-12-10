@@ -43,14 +43,16 @@ module Enumerable
     self_item = self
     if block_given?
       self_item.my_each { |x| y = false unless yield(x) }
-    elsif pattern
-      self_item.my_each { |x| y = false unless pattern == x }
-    elsif pattern.is_a? Regexp
-      self_item.my_each { |x| y = false unless x =~ pattern }
-    elsif pattern.is_a? Class
-      self_item.my_each { |x| y = false unless x.is_a? pattern }
+    elsif !pattern.nil?
+      if pattern.is_a? Class
+        self_item.my_each { |x| y = false unless x.is_a? pattern }
+      elsif pattern.is_a? Regexp
+        self_item.my_each { |x| y = false unless x =~ pattern }
+      else
+        self_item.my_each { |x| y = false unless pattern == x }
+      end
     else
-      self_item.my_each { |x| y = false unless x }
+      self_item.my_each { |x| y = false unless x == pattern }
     end
     y
   end
@@ -60,12 +62,12 @@ module Enumerable
     self_item = self
     if block_given?
       self_item.my_each { |x| y = true if yield(x) }
-    elsif pattern
-      self_item.my_each { |x| y = true if pattern == x }
     elsif pattern.is_a? Regexp
       self_item.my_each { |x| y = true if x =~ pattern }
     elsif pattern.is_a? Class
       self_item.my_each { |x| y = true if x.is_a? pattern }
+    elsif pattern
+      self_item.my_each { |x| y = true if pattern == x }
     else
       self_item.my_each { |x| y = true if x }
     end
@@ -77,12 +79,12 @@ module Enumerable
     self_item = self
     if block_given?
       self_item.my_each { |x| y = false if yield(x) }
-    elsif pattern
-      self_item.my_each { |x| y = false if pattern == x }
     elsif pattern.is_a? Regexp
       self_item.my_each { |x| y = false if x =~ pattern }
     elsif pattern.is_a? Class
       self_item.my_each { |x| y = false if x.is_a? pattern }
+    elsif pattern
+      self_item.my_each { |x| y = false if pattern == x }
     else
       self_item.my_each { |x| y = false if x }
     end
@@ -118,7 +120,7 @@ module Enumerable
     rst ||= to_a[0]
     if block_given?
       arr.my_each { |i| rst = yield(rst, i) }
-    elsif !sym.nil
+    elsif sym
       arr.my_each { |i| rst = rst.public_send(sym, i) }
     end
     rst
