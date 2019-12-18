@@ -37,7 +37,16 @@ RSpec.describe Enumerable do
 
     it 'when a block is given and the array contains symbols' do
       arr2 = %i[num name last_name]
-      expect(arr2.my_each_with_index { |x, i| x }).to eq(arr2)
+      expect(arr2.my_each_with_index { |x, i| print x, i }).to eq(arr2)
+    end
+
+    it 'when given only one parameter' do
+      expect(arr.my_each_with_index { |x| x }).to eq(arr)
+    end
+
+    it 'when given nil elements' do
+      arr3 = [nil, nil, nil]
+      expect(arr3.my_each_with_index { |x| x }).to eq(arr3)
     end
 
     context 'when trying to modify the block' do
@@ -45,11 +54,12 @@ RSpec.describe Enumerable do
     end
 
     it 'when printing inside the block different items' do
-      expect([1,2,3,"hi"].my_each_with_index { |x, i| print "#{x} #{i}"}).to eq([1,2,3,"hi"])
+      arr4 = [1, 2, 3, 'hi']
+      expect(arr4.my_each_with_index { |x, i| print "#{x} #{i}" }).to eq(arr4)
     end
 
     it 'when passing a proc' do
-      my_proc = proc { |x, i| x * 2 + 1 }
+      my_proc = proc { |x, i| x * 2 + i }
       expect(arr.my_each_with_index(&my_proc)).to eq(arr)
     end
   end

@@ -144,6 +144,3 @@ end
 
 # rubocop:enable Metrics/PerceivedComplexity,Metrics/CyclomaticComplexity
 # rubocop:enable Metrics/ModuleLength
-
-
-print [1,2,3,4].my_each_with_index{|x, i| x + i}
