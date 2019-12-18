@@ -9,6 +9,7 @@ module Enumerable
       self_item.size.times do |i|
         yield(self_item[i])
       end
+      self
     else
       to_enum(:my_each)
     end
@@ -140,5 +141,16 @@ module Enumerable
   end
 end
 
+p [1,2,3,4].my_each
+p [:num, :name].my_each
+p [:num, :name, :last_name].my_each{|x| x}
+p [:num, :name, :last_name, 3].my_each{|x| x}
+p [1,2,3,4,0].my_each{|x| x}
+p [1,2,3,4].my_each{|x| x + 2}
+[1,2,3,4].my_each{|x| print x}
+proc = Proc.new{|x| x * 2 }
+puts ""
+p [1,2,3,4].my_each(&proc)
+p [1,2,3,4].each(&proc)
 # rubocop:enable Metrics/PerceivedComplexity,Metrics/CyclomaticComplexity
 # rubocop:enable Metrics/ModuleLength
