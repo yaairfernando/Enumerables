@@ -23,6 +23,7 @@ module Enumerable
         yield(self_item[i], i)
         i += 1
       end
+      self_item
     else
       to_enum(:my_each_with_index)
     end
@@ -143,3 +144,6 @@ end
 
 # rubocop:enable Metrics/PerceivedComplexity,Metrics/CyclomaticComplexity
 # rubocop:enable Metrics/ModuleLength
+
+
+print [1,2,3,4].my_each_with_index{|x, i| x + i}

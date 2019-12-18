@@ -27,4 +27,30 @@ RSpec.describe Enumerable do
       expect(arr.my_each(&my_proc)).to eq(arr)
     end
   end
+
+  describe '#my_each_with_index' do
+    let(:arr) { [1, 2, 3, 4] }
+
+    it 'when a block is not given' do
+      expect(arr.my_each_with_index).to_not eq(Array)
+    end
+
+    it 'when a block is given and the array contains symbols' do
+      arr2 = %i[num name last_name]
+      expect(arr2.my_each_with_index { |x, i| x }).to eq(arr2)
+    end
+
+    context 'when trying to modify the block' do
+      it { expect(arr.my_each_with_index { |x, i| x + i + 2 }).to eq(arr) }
+    end
+
+    it 'when printing inside the block different items' do
+      expect([1,2,3,"hi"].my_each_with_index { |x, i| print "#{x} #{i}"}).to eq([1,2,3,"hi"])
+    end
+
+    it 'when passing a proc' do
+      my_proc = proc { |x, i| x * 2 + 1 }
+      expect(arr.my_each_with_index(&my_proc)).to eq(arr)
+    end
+  end
 end
