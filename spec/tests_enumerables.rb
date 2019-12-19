@@ -2,9 +2,12 @@
 
 require './enumerables.rb'
 RSpec.describe Enumerable do
-  describe '#my_each' do
-    let(:arr) { [1, 2, 3, 4] }
+  let(:arr) { [1, 2, 3, 4, 5] }
+  let(:arr_str) { %w[ant bear cat] }
+  let(:arr_num) { [1, 2, 4, 2] }
+  let(:num) { (5..10) }
 
+  describe '#my_each' do
     it 'when a block is not given' do
       expect(arr.my_each).to be_a(Enumerator)
     end
@@ -25,8 +28,6 @@ RSpec.describe Enumerable do
   end
 
   describe '#my_each_with_index' do
-    let(:arr) { [1, 2, 3, 4] }
-
     it 'when a block is not given' do
       expect(arr.my_each_with_index).to_not be_a(Array)
     end
@@ -35,7 +36,7 @@ RSpec.describe Enumerable do
       arr2 = %i[num name last_name]
       expect(arr2.my_each_with_index do |x, i|
         print x
-        return i
+        i
       end).to eq(arr2)
     end
 
@@ -43,7 +44,7 @@ RSpec.describe Enumerable do
       arr2 = %i[num name last_name]
       expect(arr2.my_each_with_index do |x, i|
         print i
-        return x
+        x
       end).to eq(arr2)
     end
 
@@ -67,15 +68,13 @@ RSpec.describe Enumerable do
   end
 
   describe '#my_select' do
-    let(:arr) { [1, 2, 3, 4, 5] }
-
     it 'when a block is not given' do
       expect(arr.my_select).to be_a(Enumerable)
     end
 
     it 'when a block is given and the array contains symbols' do
       arr2 = %i[num name last_name]
-      expect(arr2.my_select { |i| i.is_a? Symbol }).to eq(arr2)
+      expect(arr2.my_select { |x| x == :num }).to eq([:num])
     end
 
     it 'when given two parameter' do
@@ -100,11 +99,18 @@ RSpec.describe Enumerable do
       s = 'a'.to_sym
       expect([ses, s, :att, :red, 2, 'w'].my_select { |i| i == :a }).to eq(%i[a a])
     end
+
+    it 'when given a range with a block' do
+      expect((1..10).my_select { |i| i % 3 == 0 }).to eq([3, 6, 9])
+    end
+
+    it 'when given a lambda expresion' do
+      l = ->(el) { el > 4 }
+      expect((1..10).my_select(&l)).to eq([5, 6, 7, 8, 9, 10])
+    end
   end
 
   describe '#my_all?' do
-    let(:arr_str) { %w[ant bear cat] }
-
     it 'when a block is not given' do
       expect([nil, true, 99].my_all?).to be false
     end
@@ -137,8 +143,6 @@ RSpec.describe Enumerable do
   end
 
   describe '#my_any?' do
-    let(:arr_str) { %w[ant bear cat] }
-
     it 'when a block is not given' do
       expect([nil, true, 99].my_any?).to be true
     end
@@ -171,8 +175,6 @@ RSpec.describe Enumerable do
   end
 
   describe '#my_none?' do
-    let(:arr_str) { %w[ant bear cat] }
-
     it 'when a block is not given' do
       expect([nil, true, 99].my_none?).to be false
     end
@@ -205,10 +207,8 @@ RSpec.describe Enumerable do
   end
 
   describe '#my_count' do
-    let(:arr) { [1, 2, 4, 2] }
-
     it 'when a block is not given' do
-      expect(arr.my_count).to eq(4)
+      expect(arr_num.my_count).to eq(4)
     end
 
     it 'when a block is given and the array contains symbols' do
@@ -216,28 +216,26 @@ RSpec.describe Enumerable do
     end
 
     context 'when making operations inside the block' do
-      it { expect(arr.my_count { |x| (x + 1).even? }).to eq(1) }
+      it { expect(arr_num.my_count { |x| (x + 1).even? }).to eq(1) }
     end
 
     it 'when passing an argument' do
-      expect(arr.my_count(2)).to eq(2)
+      expect(arr_num.my_count(2)).to eq(2)
     end
 
     it 'when passing a proc' do
       my_proc = proc { |x| x.nil? }
-      expect(arr.my_count(&my_proc)).to eq(0)
+      expect(arr_num.my_count(&my_proc)).to eq(0)
     end
   end
 
   describe '#my_map' do
-    let(:arr) { [1, 2, 3, 4] }
-
     it 'when a block is not given' do
       expect(arr.my_map).to be_a(Enumerable)
     end
 
     it 'when an empty block is given' do
-      expect(arr.my_map {}).to eq([nil, nil, nil, nil])
+      expect(arr.my_map {}).to eq([nil, nil, nil, nil, nil])
     end
 
     it 'when an empty block is given and with empty array' do
@@ -254,13 +252,11 @@ RSpec.describe Enumerable do
 
     it 'when using a proc as a block' do
       my_proc2 = proc { |i| i + 1 }
-      expect(arr.my_map(&my_proc2)).to eq([2, 3, 4, 5])
+      expect(arr.my_map(&my_proc2)).to eq([2, 3, 4, 5, 6])
     end
   end
 
   describe '#my_inject' do
-    let(:num) { (5..10) }
-
     it 'when an empty block is given' do
       expect(num.my_inject {}).to eq(nil)
     end
