@@ -142,5 +142,22 @@ module Enumerable
   end
 end
 
+p [1,2,3,4,5].my_select{|x,i| x == i}
+p [:ses,:s,:att,:red,2,"w"].my_select{|i| i.is_a? Symbol}
+p [1,2,3,4,5].my_select{|i| i > 2}
+p [1,2,3,4,5].my_select{|i| i < 2}
+p [1,2,3,4,5].my_select{|i| i == 2}
+
+p ["MXM", "USA", "RUS", "POR", "hello"].my_select{|i| i == i.upcase}
+p ["MXM", "USA", "RUS", "POR", "hello", "heolloeh"].my_select{|i| i == i.reverse}
+p ["MXM", "USA", "RUS", "POR", "hello", "heolloeh"].select{|i| i.include? "R"}
+
+
+ses = "a".to_sym
+p s = "a".to_sym
+p [ses,s,:att,:red,2,"w"].my_select{|i| i == :a}
+
+
+
 # rubocop:enable Metrics/PerceivedComplexity,Metrics/CyclomaticComplexity
 # rubocop:enable Metrics/ModuleLength
