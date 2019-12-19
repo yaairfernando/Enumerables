@@ -4,7 +4,7 @@
 module Enumerable
   # rubocop:disable Metrics/PerceivedComplexity,Metrics/CyclomaticComplexity
   def my_each
-    self_item = self
+    self_item = to_a
     if block_given?
       self_item.size.times do |i|
         yield(self_item[i])
@@ -107,10 +107,11 @@ module Enumerable
   end
 
   def my_map
+    to_a
     arr = []
-    my_each do |x|
-      return to_enum(:my_map) unless block_given?
+    return to_enum(:my_map) unless block_given?
 
+    my_each do |x|
       arr << yield(x) || arr << proc.call(i) if block_given?
     end
     arr

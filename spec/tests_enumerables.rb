@@ -201,4 +201,33 @@ RSpec.describe Enumerable do
       expect((1..4).my_none? { |i| i < 0 }).to be true
     end
   end
+
+  describe '#my_map' do
+    let(:arr) { [1, 2, 3, 4] }
+
+    it 'when a block is not given' do
+      expect(arr.my_map).to be_a(Enumerable)
+    end
+
+    it 'when an empty block is given' do
+      expect(arr.my_map {}).to eq([nil, nil, nil, nil])
+    end
+
+    it 'when an empty block is given and with empty array' do
+      expect([].my_map {}).to eq([])
+    end
+
+    it 'when a block is given with a range of numbers' do
+      expect((1..4).my_map { |i| i * i }).to eq([1, 4, 9, 16])
+    end
+
+    it 'when a block is given with an array of strings' do
+      expect(%w[he lo].my_map { |i| i + 'llo' }).to eq(%w[hello lollo])
+    end
+
+    it 'when using a proc as a block' do
+      my_proc2 = proc { |i| i + 1 }
+      expect(arr.my_map(&my_proc2)).to eq([2, 3, 4, 5])
+    end
+  end
 end
