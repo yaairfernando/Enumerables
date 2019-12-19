@@ -255,4 +255,38 @@ RSpec.describe Enumerable do
       expect(arr.my_map(&my_proc2)).to eq([2, 3, 4, 5])
     end
   end
+
+  describe '#my_inject' do
+    let(:num) { (5..10) }
+
+    it 'when an empty block is given' do
+      expect(num.my_inject {}).to eq(nil)
+    end
+
+    it 'when an empty block is given and with empty array' do
+      expect([].my_inject {}).to eq(nil)
+    end
+
+    it 'when a block is given with a range of numbers' do
+      expect(num.my_inject { |sum, n| sum + n }).to eq(45)
+    end
+
+    it 'when a block is given and an argument is given' do
+      expect(num.my_inject(1) { |sum, num| sum * num }).to eq(151_200)
+    end
+
+    it 'when passing two arguments' do
+      expect(num.my_inject(3, :*)).to eq(453_600)
+    end
+
+    it 'when using a proc as a block' do
+      my_proc2 = proc { |i| i + 1 }
+      expect(num.my_inject(&my_proc2)).to eq(10)
+    end
+
+    it 'when passing an array of strings' do
+      strings = %w[cat sheep bear]
+      expect(strings.my_inject { |p, n| p + n }).to eq('catsheepbear')
+    end
+  end
 end

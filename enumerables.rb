@@ -122,9 +122,9 @@ module Enumerable
     arr = rst ? to_a : to_a[1..-1]
     rst ||= to_a[0]
     if block_given?
-      arr.my_each { |i| rst = yield(rst, i) }
+      arr.to_a.my_each { |i| rst = yield(rst, i) }
     elsif sym
-      arr.my_each { |i| rst = rst.public_send(sym, i) }
+      arr.to_a.my_each { |i| rst = rst.public_send(sym, i) }
     end
     rst
   end
