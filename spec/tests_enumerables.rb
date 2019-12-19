@@ -104,7 +104,7 @@ RSpec.describe Enumerable do
     let(:arr_str) { %w[ant bear cat] }
 
     it 'when a block is not given' do
-      expect([nil, true, 99].my_all? ).to be false
+      expect([nil, true, 99].my_all?).to be false
     end
 
     it 'when a block is not given and with empty array' do
@@ -112,7 +112,7 @@ RSpec.describe Enumerable do
     end
 
     it 'when given two parameter' do
-      expect(arr_str.my_all? { |x, i| x == x }).to be true
+      expect(arr_str.my_all? { |x, i| x.length >= 3 && i != 0 }).to be true
     end
 
     context 'when using an array of string' do
@@ -130,7 +130,7 @@ RSpec.describe Enumerable do
     end
 
     it 'when using a range' do
-      expect((1..4).my_all?{|i| i > 0}).to be true
+      expect((1..4).my_all? { |i| i > 0 }).to be true
     end
   end
 end
