@@ -87,17 +87,16 @@ RSpec.describe Enumerable do
     end
 
     context 'when using an array of string' do
-      arr_string = ["MXM", "USA", "RUS", "POR", "hello", "heolloeh"]
-      it { expect(arr_string.my_select { |i| i == i.upcase }).to eq(["MXM", "USA", "RUS", "POR"]) }
-      it { expect(arr_string.my_select { |i| i == i.reverse }).to eq(["MXM", "heolloeh"]) }
-      it { expect(arr_string.my_select { |i| i.include?("R") }).to eq(["RUS", "POR"]) }
+      arr_string = %w[MXM USA RUS POR hello heolloeh]
+      it { expect(arr_string.my_select { |i| i == i.upcase }).to eq(%w[MXM USA RUS POR]) }
+      it { expect(arr_string.my_select { |i| i == i.reverse }).to eq(%w[MXM heolloeh]) }
+      it { expect(arr_string.my_select { |i| i.include?('R') }).to eq(%w[RUS POR]) }
     end
 
     it 'when using different items' do
-      ses = "a".to_sym
-      s = "a".to_sym
-      expect([ses,s,:att,:red,2,"w"].my_select{|i| i == :a}).to eq([:a, :a])
+      ses = 'a'.to_sym
+      s = 'a'.to_sym
+      expect([ses, s, :att, :red, 2, 'w'].my_select { |i| i == :a }).to eq(%i[a a])
     end
-    
   end
 end
