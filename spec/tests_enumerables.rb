@@ -210,12 +210,11 @@ RSpec.describe Enumerable do
     end
 
     it 'when a block is given and the array contains symbols' do
-      arr2 = %i[num name last_name]
-      expect([:s, :a, 2, true].my_count{ |x| x == true }).to eq(1)
+      expect([:s, :a, 2, true].my_count { |x| x == true }).to eq(1)
     end
 
     context 'when making operations inside the block' do
-      it { expect(arr.my_count { |x| (x + 1) % 2 == 0 }).to eq(1) }
+      it { expect(arr.my_count { |x| (x + 1).even? }).to eq(1) }
     end
 
     it 'when passing an argument' do
@@ -223,7 +222,7 @@ RSpec.describe Enumerable do
     end
 
     it 'when passing a proc' do
-      my_proc = proc { |x| nil }
+      my_proc = proc { |x| x.nil? }
       expect(arr.my_count(&my_proc)).to eq(0)
     end
   end
