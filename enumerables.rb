@@ -145,3 +145,11 @@ end
 
 # rubocop:enable Metrics/PerceivedComplexity,Metrics/CyclomaticComplexity
 # rubocop:enable Metrics/ModuleLength
+
+ary = [1, 2, 4, 2]
+p ary.my_count               #=> 4
+p [:s, :a, 2, true].my_count{ |x| x == true } #=> 3
+p ary.my_count(2)            #=> 2
+p ary.my_count{ |x| x%2==0 } #=> 3
+p ary.count { |x| (x + 1) % 2 == 0 } #=> 3
+my_proc = proc { |x| nil }
