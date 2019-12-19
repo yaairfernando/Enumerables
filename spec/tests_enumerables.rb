@@ -133,4 +133,38 @@ RSpec.describe Enumerable do
       expect((1..4).my_all? { |i| i > 0 }).to be true
     end
   end
+
+  describe '#my_any?' do
+    let(:arr_str) { %w[ant bear cat] }
+
+    it 'when a block is not given' do
+      expect([nil, true, 99].my_any?).to be true
+    end
+
+    it 'when a block is not given and with empty array' do
+      expect([].my_any?).to be false
+    end
+
+    it 'when given two parameter' do
+      expect(arr_str.my_any? { |x, i| x.length >= 3 && i != 0 }).to be true
+    end
+
+    context 'when using an array of string' do
+      it { expect(arr_str.my_any? { |i| i == i.downcase }).to be true }
+      it { expect(arr_str.my_any? { |word| word.length < 3 }).to be false }
+      it { expect(arr_str.my_any? { |word| word.length >= 4 }).to be true }
+    end
+
+    it 'when using regex' do
+      expect(arr_str.my_any?(/[a-c]/)).to be true
+    end
+
+    it 'when checking types of elements in array' do
+      expect([1, 2i, 3.14].my_any?(Numeric)).to be true
+    end
+
+    it 'when using a range' do
+      expect((1..4).my_any? { |i| i > 0 }).to be true
+    end
+  end
 end

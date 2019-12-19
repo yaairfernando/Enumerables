@@ -61,7 +61,7 @@ module Enumerable
 
   def my_any?(pattern = nil)
     y = false
-    self_item = self
+    self_item = to_a
     if block_given?
       self_item.my_each { |x| y = true if yield(x) }
     elsif pattern.is_a? Regexp
