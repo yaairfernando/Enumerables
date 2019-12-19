@@ -42,7 +42,7 @@ module Enumerable
 
   def my_all?(pattern = nil)
     y = true
-    self_item = self
+    self_item = self.to_a
     if block_given?
       self_item.my_each { |x| y = false unless yield(x) }
     elsif !pattern.nil?

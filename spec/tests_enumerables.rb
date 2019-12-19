@@ -99,4 +99,38 @@ RSpec.describe Enumerable do
       expect([ses, s, :att, :red, 2, 'w'].my_select { |i| i == :a }).to eq(%i[a a])
     end
   end
+
+  describe '#my_all?' do
+    let(:arr_str) { %w[ant bear cat] }
+
+    it 'when a block is not given' do
+      expect([nil, true, 99].my_all? ).to be false
+    end
+
+    it 'when a block is not given and with empty array' do
+      expect([].my_all?).to be true
+    end
+
+    it 'when given two parameter' do
+      expect(arr_str.my_all? { |x, i| x == x }).to be true
+    end
+
+    context 'when using an array of string' do
+      it { expect(arr_str.my_all? { |i| i == i.downcase }).to be true }
+      it { expect(arr_str.my_all? { |word| word.length >= 3 }).to be true }
+      it { expect(arr_str.my_all? { |word| word.length >= 4 }).to be false }
+    end
+
+    it 'when using regexp' do
+      expect(arr_str.my_all?(/t/)).to be false
+    end
+
+    it 'when checking types of elements in array' do
+      expect([1, 2i, 3.14].my_all?(Numeric)).to be true
+    end
+
+    it 'when using a range' do
+      expect((1..4).my_all?{|i| i > 0}).to be true
+    end
+  end
 end
