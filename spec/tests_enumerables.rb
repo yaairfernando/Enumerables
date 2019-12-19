@@ -167,4 +167,38 @@ RSpec.describe Enumerable do
       expect((1..4).my_any? { |i| i > 0 }).to be true
     end
   end
+
+  describe '#my_none?' do
+    let(:arr_str) { %w[ant bear cat] }
+
+    it 'when a block is not given' do
+      expect([nil, true, 99].my_none?).to be false
+    end
+
+    it 'when a block is not given and with empty array' do
+      expect([].my_none?).to be true
+    end
+
+    it 'when given two parameter' do
+      expect(arr_str.my_none? { |x, i| x.length >= 3 && i != 0 }).to be false
+    end
+
+    context 'when using an array of string' do
+      it { expect(arr_str.my_none? { |i| i == i.upcase }).to be true }
+      it { expect(arr_str.my_none? { |word| word.length < 3 }).to be true }
+      it { expect(arr_str.my_none? { |word| word.length >= 4 }).to be false }
+    end
+
+    it 'when using regex' do
+      expect(arr_str.my_none?(/[x-z]/)).to be true
+    end
+
+    it 'when checking types of elements in array' do
+      expect([1, 2i, 3.14].my_none?(Numeric)).to be false
+    end
+
+    it 'when using a range' do
+      expect((1..4).my_none? { |i| i < 0 }).to be true
+    end
+  end
 end

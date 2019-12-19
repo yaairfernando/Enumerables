@@ -78,7 +78,7 @@ module Enumerable
 
   def my_none?(pattern = nil)
     y = true
-    self_item = self
+    self_item = to_a
     if block_given?
       self_item.my_each { |x| y = false if yield(x) }
     elsif pattern.is_a? Regexp
