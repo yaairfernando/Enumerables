@@ -29,7 +29,7 @@ RSpec.describe Enumerable do
 
   describe '#my_each_with_index' do
     it 'when a block is not given' do
-      expect(arr.my_each_with_index).to_not be_a(Array)
+      expect(arr.my_each_with_index).to be_a(Enumerable)
     end
 
     it 'when a block is given and the array contains symbols' do
