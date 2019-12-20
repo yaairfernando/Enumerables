@@ -4,11 +4,12 @@
 module Enumerable
   # rubocop:disable Metrics/PerceivedComplexity,Metrics/CyclomaticComplexity
   def my_each
-    self_item = self
+    self_item = to_a
     if block_given?
       self_item.size.times do |i|
         yield(self_item[i])
       end
+      self
     else
       to_enum(:my_each)
     end
@@ -22,6 +23,7 @@ module Enumerable
         yield(self_item[i], i)
         i += 1
       end
+      self_item
     else
       to_enum(:my_each_with_index)
     end
@@ -40,7 +42,7 @@ module Enumerable
 
   def my_all?(pattern = nil)
     y = true
-    self_item = self
+    self_item = to_a
     if block_given?
       self_item.my_each { |x| y = false unless yield(x) }
     elsif !pattern.nil?
@@ -59,7 +61,7 @@ module Enumerable
 
   def my_any?(pattern = nil)
     y = false
-    self_item = self
+    self_item = to_a
     if block_given?
       self_item.my_each { |x| y = true if yield(x) }
     elsif pattern.is_a? Regexp
@@ -76,7 +78,7 @@ module Enumerable
 
   def my_none?(pattern = nil)
     y = true
-    self_item = self
+    self_item = to_a
     if block_given?
       self_item.my_each { |x| y = false if yield(x) }
     elsif pattern.is_a? Regexp
@@ -105,10 +107,11 @@ module Enumerable
   end
 
   def my_map
+    to_a
     arr = []
-    my_each do |x|
-      return to_enum(:my_map) unless block_given?
+    return to_enum(:my_map) unless block_given?
 
+    my_each do |x|
       arr << yield(x) || arr << proc.call(i) if block_given?
     end
     arr
@@ -119,9 +122,9 @@ module Enumerable
     arr = rst ? to_a : to_a[1..-1]
     rst ||= to_a[0]
     if block_given?
-      arr.my_each { |i| rst = yield(rst, i) }
+      arr.to_a.my_each { |i| rst = yield(rst, i) }
     elsif sym
-      arr.my_each { |i| rst = rst.public_send(sym, i) }
+      arr.to_a.my_each { |i| rst = rst.public_send(sym, i) }
     end
     rst
   end
